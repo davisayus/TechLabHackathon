@@ -1,0 +1,36 @@
+﻿@inherits LayoutComponentBase
+
+<RadzenLayout style="position: relative">
+    <RadzenHeader Style="background-color:#ec5104">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
+            <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
+            <RadzenLabel Text="Techlab - Hackathon 2024" />
+        </RadzenStack>
+    </RadzenHeader>
+    <RadzenSidebar Responsive="false" @bind-Expanded="@sidebarExpanded" style="position: absolute">
+        <RadzenPanelMenu>
+            <RadzenPanelMenuItem Text="Home" Icon="home" Path="/" Click="@OnClick" />
+            <RadzenPanelMenuItem Text="Code Editor" Icon="terminal" Path="/ide" Click="@OnClick" />
+            <RadzenPanelMenuItem Text="Profile" Icon="account_box" Path="/profile" Click="@OnClick" />
+
+        </RadzenPanelMenu>
+    </RadzenSidebar>
+    <RadzenBody>
+        @Body
+    </RadzenBody>
+    <RadzenFooter>
+        Copyright © 2024 Davis Ayus by LeanTech - TechLab - Hackathon 2024
+    </RadzenFooter>
+</RadzenLayout>
+
+<RadzenComponent />
+
+@code {
+    bool sidebarExpanded = false;
+
+    void OnClick(MenuItemEventArgs args)
+    {
+        sidebarExpanded = false;
+    }
+}
+

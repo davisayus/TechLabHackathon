@@ -1,0 +1,6 @@
+@LT.TechLabHackathon.Services_HostAddress = http://localhost:5082
+
+GET {{LT.TechLabHackathon.Services_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

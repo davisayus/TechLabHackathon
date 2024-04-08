@@ -1,0 +1,101 @@
+﻿@using LT.TechLabHackathon.Shared.DTOs
+@using LT.TechLabHackathon.UI.Core
+
+@inject IUserAPIRepository _userRepository
+@inject IAuthenticationAPIRepository _authRepository
+@inject NotificationService _notification
+@inject NavigationManager _navigationManager
+@inject CollectionsShared _collectionsShared
+
+@if (_userCreate is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <RadzenTemplateForm Data="@_userCreate" Submit="@((UserCreateDto args) => { Submit(args); })">
+        <RadzenRow Gap="2rem" Class="rz-p-0 rz-p-lg-4">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenStack>
+            <RadzenFieldset Text="User Info">
+                <RadzenStack  Gap="1rem">
+                <RadzenRow AlignItems="AlignItems.Center">
+                    <RadzenColumn Size="12" SizeMD="4">
+                        <RadzenLabel Text="Full Name:" Component="Name" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="8">
+                        <RadzenTextBox @bind-Value="_userCreate.Name" Style="width:100%" Name="Name" ></RadzenTextBox>
+                        <RadzenLengthValidator Component="Name" Min="10" Text="Full name should be at least 10 characters" Popup=true Style="position: absolute" />
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenRow AlignItems="AlignItems.Center">
+                    <RadzenColumn Size="12" SizeMD="4">
+                        <RadzenLabel Text="E-Mail" Component="Email"/>
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="8">
+                        <RadzenTextBox @bind-Value="_userCreate.Email" Style="width: 100%; display:block" Name="Email" />
+                        <RadzenRequiredValidator Component="Email" Text="Email is required" Popup=true Style="position: absolute" />
+                        <RadzenEmailValidator Component="Email" Text="Provide a valid email address" Popup=true Style="position: absolute" />
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenRow AlignItems="AlignItems.Center">
+                    <RadzenColumn Size="12" SizeMD="8">
+                        <RadzenLabel Text="Authentication Doublefactor" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="4">
+                        <RadzenSwitch Name="AuthDoublefactor" @bind-Value="_userCreate.AuthDoublefactor" />
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenRow AlignItems="AlignItems.Center">
+                    <RadzenColumn Size="12" SizeMD="4">
+                        <RadzenLabel Text="Phone Number" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="8">
+                        <RadzenMask Mask="(***) ***-****" CharacterPattern="[0-9]" Placeholder="(000) 000-0000" Name="PhoneNumber" @bind-Value=@_userCreate.PhoneNumber Style="width: 100%;" aria-label="PhoneNUmber" />
+                        <RadzenLengthValidator Component="PhoneNumber" Min="10" Max="14" Text="Phone Number should be at least 10 numbers" Popup=true Style="position: absolute" />
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenRow AlignItems="AlignItems.Center">
+                    <RadzenColumn Size="12" SizeMD="4">
+                        <RadzenLabel Text="Image" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="8">
+                        <RadzenFileInput @bind-Value=@_userCreate.Picture @bind-FileName=@_fileName @bind-FileSize=@_fileSize TValue="string" class="w-100"
+                            Change=@(args => OnSelectFile(args)) Error=@(args => OnErrorSelectFile(args)) InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "select file" }})" />
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenRow AlignItems="AlignItems.Center">
+                    <RadzenColumn Size="12" SizeMD="4">
+                        <RadzenLabel Text="Password" Component="Password" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="8">
+                        <RadzenPassword Name="Password" @bind-Value=@_password Style="display: block; width: 100%" />
+                        <RadzenRequiredValidator Component="Password" Text="Enter password" Popup="true" Style="position: absolute" />
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenRow AlignItems="AlignItems.Center">
+                    <RadzenColumn Size="12" SizeMD="4">
+                        <RadzenLabel Text="Repeat Password" Component="RepeatPassword" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="8">
+                        <RadzenPassword Name="RepeatPassword" @bind-Value=@_repeatPassword Style="display: block; width: 100%" />
+                        <RadzenRequiredValidator Component="RepeatPassword" Text="Repeat your password" Popup=true Style="position: absolute" />
+                        <RadzenCompareValidator Visible=@(!string.IsNullOrEmpty(_repeatPassword)) Value=@_password Component="RepeatPassword" Text="Passwords should be the same" Popup=true Style="position: absolute" />
+                    </RadzenColumn>
+                </RadzenRow>
+                </RadzenStack>
+            </RadzenFieldset>
+            </RadzenStack>
+        </RadzenColumn>
+        <RadzenColumn>
+            <RadzenStack>
+
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" Class="rz-mt-8 rz-mb-4">
+            <RadzenButton ButtonType="ButtonType.Submit" Size="ButtonSize.Large" Icon="save" Text="Save" />
+            <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancel" Click="@Cancel" />
+        </RadzenStack>
+    </RadzenTemplateForm>
+}

@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34701.34
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LT.TechLabHackathon.Services", "LT.TechLabHackathon.Services.csproj", "{3A9A0FDB-4BF1-42AE-8343-A7F1A86F0EF0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LT.TechLabHackathon.Domain", "..\LT.TechLabHackathon.Domain\LT.TechLabHackathon.Domain.csproj", "{3B49DF72-36DC-419F-A208-F4046B0212C5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LT.TechLabHackathon.DataAccess", "..\LT.TechLabHackathon.DataAccess\LT.TechLabHackathon.DataAccess.csproj", "{BDE90291-4094-44A8-9D53-FD9A9F1F397C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LT.TechLabHackathon.Core", "..\LT.TechLabHackathon.Core\LT.TechLabHackathon.Core.csproj", "{E71B4778-5693-490C-8B7D-9FD4E62CAFD0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LT.TechLabHackathon.UI", "..\LT.TechLabHackathon.UI\LT.TechLabHackathon.UI.csproj", "{3BD6F8BC-CA31-4CB0-9165-5F8238EA0AB5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LT.TechLabHackathon.Shared", "..\LT.TechLabHackathon.Shared\LT.TechLabHackathon.Shared.csproj", "{C4235CB6-7BA9-479B-B523-DD58BFD90404}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3A9A0FDB-4BF1-42AE-8343-A7F1A86F0EF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A9A0FDB-4BF1-42AE-8343-A7F1A86F0EF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A9A0FDB-4BF1-42AE-8343-A7F1A86F0EF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A9A0FDB-4BF1-42AE-8343-A7F1A86F0EF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B49DF72-36DC-419F-A208-F4046B0212C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B49DF72-36DC-419F-A208-F4046B0212C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B49DF72-36DC-419F-A208-F4046B0212C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B49DF72-36DC-419F-A208-F4046B0212C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDE90291-4094-44A8-9D53-FD9A9F1F397C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDE90291-4094-44A8-9D53-FD9A9F1F397C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDE90291-4094-44A8-9D53-FD9A9F1F397C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDE90291-4094-44A8-9D53-FD9A9F1F397C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E71B4778-5693-490C-8B7D-9FD4E62CAFD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E71B4778-5693-490C-8B7D-9FD4E62CAFD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E71B4778-5693-490C-8B7D-9FD4E62CAFD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E71B4778-5693-490C-8B7D-9FD4E62CAFD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BD6F8BC-CA31-4CB0-9165-5F8238EA0AB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BD6F8BC-CA31-4CB0-9165-5F8238EA0AB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BD6F8BC-CA31-4CB0-9165-5F8238EA0AB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BD6F8BC-CA31-4CB0-9165-5F8238EA0AB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4235CB6-7BA9-479B-B523-DD58BFD90404}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4235CB6-7BA9-479B-B523-DD58BFD90404}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4235CB6-7BA9-479B-B523-DD58BFD90404}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4235CB6-7BA9-479B-B523-DD58BFD90404}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {41A4248D-15F2-412C-9E1A-ABB1C2697C98}
+	EndGlobalSection
+EndGlobal

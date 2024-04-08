@@ -1,0 +1,33 @@
+﻿@page "/ide"
+
+@inject IProgrammingLanguageAPIRepository _programingLanguegeRepository
+@inject IChallengeLevelAPIRepository _challengeLevelRepository
+@inject IChallengeAPIRepository _challengeRepository;
+
+<RadzenRow Style="height:20%; width:100%; padding-bottom:10px">
+    <FiltersChallenge ProgrammingLanguages="_programmingLanguages" Levels="_challengeLevels" Challenges="_challenges" DropDownEvent_ChangeValue="Filters_DropDown_ChangeValue"></FiltersChallenge>
+</RadzenRow>
+<RadzenRow Style="height:80%; width:100%">
+    <RadzenStack Style="height:100%; width:100%" Orientation="Orientation.Horizontal">
+        <RadzenRow Style="height:100%; width:100%">
+            <RadzenColumn Style="width:50%">
+                <CodeEditor Challenge="_selectedChallenge" ProgrammingLanguage="_selectedProgrammingLanguage" ResultCompilation="OnExecution" ></CodeEditor>
+            </RadzenColumn>
+            <RadzenColumn Style="width:50%">
+                <RadzenCard Style="height:100%">
+                    <RadzenTabs>
+                        <Tabs>
+                            <RadzenTabsItem Icon="subtitles" Text="Challenge Description">
+                                <DescriptionChallenge Challenge="_selectedChallenge"></DescriptionChallenge>
+                            </RadzenTabsItem>
+                            <RadzenTabsItem Icon="developer_mode" Text="Result">
+                                <ExecutionResult ResultMessage="@_messageResultExecution"></ExecutionResult>
+                            </RadzenTabsItem>
+                        </Tabs>
+                    </RadzenTabs>
+                </RadzenCard>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenStack>
+</RadzenRow>
+

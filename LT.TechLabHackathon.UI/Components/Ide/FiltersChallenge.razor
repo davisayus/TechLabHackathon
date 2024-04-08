@@ -1,0 +1,27 @@
+﻿<RadzenCard Style="height:100%; width:100%">
+    <RadzenStack Orientation="Orientation.Horizontal">
+        <RadzenText TextStyle="TextStyle.Caption" TextAlign="TextAlign.Left" Style="width:50%">This is the moment of truth, let's go for a real challenge! </RadzenText>
+        <RadzenText TextStyle="TextStyle.Caption" TextAlign="TextAlign.Left" Style="width:50%">Here are the challenges I have gone through! </RadzenText>
+    </RadzenStack>
+    
+    <RadzenRow RowGap="10px" Gap="10px" Style="padding-bottom:10px">
+        <RadzenColumn Style="width:50%"> 
+            <RadzenStack Orientation="Orientation.Horizontal" Gap="10px">
+                <RadzenDropDown @bind-Value=@_programmingLanguageId Data=@ProgrammingLanguages TextProperty="Title" ValueProperty="ProgrammingLanguageId" Multiple=false AllowClear=true Placeholder="Select programming language" AllowSelectAll=false class="w-100" Style="width:50%" Change="DropDown_ChangeValue" />
+                <RadzenDropDown @bind-Value=@_levelId Data=@Levels TextProperty="Description" ValueProperty="LevelId" Multiple=false AllowClear=true Placeholder="Select difficulty level" AllowSelectAll=false class="w-100" Style="width:50%" Change="DropDown_ChangeValue" />
+            </RadzenStack>
+        </RadzenColumn>
+        <RadzenColumn Style="width:50%">
+            <RadzenDropDown @bind-Value=@_challengeId Data=@Challenges TextProperty="Title" ValueProperty="ChallengeId" Multiple=false AllowClear=true Placeholder="My challenges" AllowSelectAll=false class="w-100" Style="width:100%" Change="DropDown_ChangeValue" />
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow RowGap="10px" Gap="10px">
+        <RadzenColumn Style="width:50%">
+            <RadzenDropDown @bind-Value=@_challengeId Data=@Challenges TextProperty="Title" ValueProperty="ChallengeId" Multiple=false AllowClear=true Placeholder="Select Challenge" AllowSelectAll=false class="w-100" Style="width:100%" Change="DropDown_ChangeValue" />
+        </RadzenColumn>
+        <RadzenColumn Style="width:50%">
+
+        </RadzenColumn>
+    </RadzenRow>
+
+</RadzenCard>

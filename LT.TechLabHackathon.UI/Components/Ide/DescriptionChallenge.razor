@@ -1,0 +1,7 @@
+﻿@inject IJSRuntime jsRuntime
+
+<RadzenHtmlEditor @ref="htmlEditor" spellcheck="false" Style="height:100%; width:100%" @bind-Value=@htmlCodeEditor Input=@OnInput Change=@OnChange Paste=@OnPaste Execute=@OnExecute Name="Code Editor">
+    <RadzenHtmlEditorFontName />
+    <RadzenHtmlEditorFontSize />
+
+</RadzenHtmlEditor>

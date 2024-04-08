@@ -1,0 +1,32 @@
+﻿@page "/"
+@using Blazored.LocalStorage
+@using LT.TechLabHackathon.UI.Core
+@using LT.TechLabHackathon.UI.Providers.Auth
+
+@inject NotificationService _notification
+@inject CollectionsShared _collectionsShared
+@inject ILocalStorageService _localStorage
+@inject ILoginService _loginService
+
+<PageTitle>Home</PageTitle>
+<RadzenRow class="rz-text-align-center" Style ="height:100%; background-color:white">
+    <RadzenColumn Size="6" class="rz-p-1" Style="background-image:url('images/developer1.avif'); background-repeat:no-repeat; background-size:contain; background-position:center">
+        <RadzenCard>
+            <RadzenText Style="color: var(--rz-text-secondary-color)" TextStyle="TextStyle.H4" TextAlign="TextAlign.Center">It's time for a challenge</RadzenText>
+        </RadzenCard>
+    </RadzenColumn>
+    <RadzenColumn Size="6" class="rz-p-1" Style="align-content:center; background-image:url('images/warrior2.jpg'); background-size:200px 200px;">
+        <AuthorizeView>
+            <Authorized>
+                <RadzenCard>
+                    <Welcome></Welcome>
+                </RadzenCard>
+            </Authorized>
+            <NotAuthorized>
+                <Login OnLoginSuccess="OnLoginSuccess" OnLoginError="OnLoginError"></Login>
+            </NotAuthorized>
+        </AuthorizeView>
+    </RadzenColumn>
+
+</RadzenRow>
+

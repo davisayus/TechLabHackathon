@@ -1,0 +1,21 @@
+﻿@inject IJSRuntime jsRuntime
+@inject IProgrammingLanguageAPIRepository _progLanguageRepository
+
+<RadzenCard Style="height:100%; width:100%">
+    <RadzenHtmlEditor @ref="htmlEditor" spellcheck="false" Style="height:100%" @bind-Value=@htmlCodeEditor Input=@OnInput Change=@OnChange Paste=@OnPaste Execute=@OnExecute Name="Code Editor">
+        <RadzenHtmlEditorUndo />
+        <RadzenHtmlEditorRedo />
+        <RadzenHtmlEditorSeparator />
+        <RadzenHtmlEditorIndent Shortcut="Tab" />
+        <RadzenHtmlEditorOutdent Shortcut="Shift+Tab" />
+        <RadzenHtmlEditorSeparator />
+
+        <RadzenHtmlEditorFontName />
+        <RadzenHtmlEditorFontSize />
+
+        <RadzenHtmlEditorCustomTool CommandName="Play" Icon="done" Title="Execute" />
+    </RadzenHtmlEditor>
+
+</RadzenCard>
+
+
