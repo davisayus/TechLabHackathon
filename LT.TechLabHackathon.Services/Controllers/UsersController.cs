@@ -7,9 +7,11 @@ using LT.TechLabHackathon.Domain.Entities;
 using LT.TechLabHackathon.Services.Controllers.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LT.TechLabHackathon.Services.Controllers
 {
+    [Authorize]
     [Route("api/v1/[controller]")]
     [ApiController]
     public class UsersController : GenericController<User, UserDto, UserCreateDto>

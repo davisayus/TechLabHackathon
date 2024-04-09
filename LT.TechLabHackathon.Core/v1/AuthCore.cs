@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,7 +39,6 @@ namespace LT.TechLabHackathon.Core.v1
             try
             {
                 var userInfo = await ValidateUserAccess(userEmail);
-                //string passEncrypt = _encryptCore.Encrypt_SHA256(password, userEmail, _configuration["EncrypPassword:Key"]!);
                 string encrypValue = $"{userEmail}.{password}";
                 string passEncrypt = _encryptCore.Encrypt_HMACSHA256(encrypValue, _configuration["EncrypPassword:Key"]!);
                 if (userInfo.Password.Trim() != passEncrypt)
@@ -326,6 +326,45 @@ namespace LT.TechLabHackathon.Core.v1
             }
 
         }
+        public async Task<ResponseService<LoginResponseDto>> RenewToken(LoginRenewToken loginRenewToken)
+        {
+            try
+            {
+                var _symmetricSecurityKey = new SymmetricSecurityKey(
+                    Encoding.ASCII.GetBytes(_configuration["JWT:SecretKey"]!)
+                );
 
+                var validationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = _symmetricSecurityKey,
+                    ValidIssuer = _configuration["Jwt:Issuer"],
+                    ValidateIssuer = true,
+                    ValidAudience = _configuration["Jwt:Audience"],
+                    ValidateAudience = true,
+                    ValidateLifetime = false 
+                };
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var validationResult = await tokenHandler.ValidateTokenAsync(loginRenewToken.ExpiredToken, validationParameters);
+                if (!validationResult.IsValid)
+                    return new ResponseService<LoginResponseDto>(true, "The token is not valid.", HttpStatusCode.OK, new LoginResponseDto(string.Empty, new UserDto()));
+
+                TimeSpan difference = (DateTime.Now - validationResult.SecurityToken.ValidTo);
+                if (difference.Days > 15)
+                    return new ResponseService<LoginResponseDto>(true, "It has been more than 15 days since your last login.", HttpStatusCode.OK, new LoginResponseDto(string.Empty, new UserDto()));
+
+                var userEmailClaim = (string)validationResult.Claims.FirstOrDefault(c => c.Key == ClaimTypes.Email)!.Value ?? string.Empty;
+
+                var userInfo = await ValidateUserAccess(userEmailClaim);
+                var userDto = userInfo.MapToDto();
+                var response = new LoginResponseDto(GetTokenJWT(userDto), userDto);
+                return new ResponseService<LoginResponseDto>(false, "Success Renew Token", HttpStatusCode.OK, response);
+            }
+            catch (Exception ex)
+            {
+                return _errors.Error(ex, "RenewToken", new LoginResponseDto(string.Empty, new UserDto()));
+            }
+        }
     }
 }

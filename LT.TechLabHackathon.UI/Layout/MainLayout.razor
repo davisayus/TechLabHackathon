@@ -1,11 +1,28 @@
-﻿@inherits LayoutComponentBase
+﻿@using static LT.TechLabHackathon.Shared.DTOs.Records
+@inherits LayoutComponentBase
+@inject AuthenticationStateJWT _authenticationStateJwt
+@inject IAuthenticationAPIRepository _authRepository
+@inject CollectionsShared _collectionShared
+@inject ILoginService _loginService
 
 <RadzenLayout style="position: relative">
     <RadzenHeader Style="background-color:#ec5104">
-        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
-            <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
-            <RadzenLabel Text="Techlab - Hackathon 2024" />
-        </RadzenStack>
+        <RadzenRow Style="width:100%">
+            <RadzenColumn Style="width:40%">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
+                    <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
+                    <RadzenLabel Text="Techlab - Hackathon 2024" />
+                </RadzenStack>
+            </RadzenColumn>
+            <RadzenColumn Style="width:30%">
+
+            </RadzenColumn>
+            <RadzenColumn Style="width:30%; align-content: center">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
+                    <ShowAuthenticatedUser/>
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
     </RadzenHeader>
     <RadzenSidebar Responsive="false" @bind-Expanded="@sidebarExpanded" style="position: absolute">
         <RadzenPanelMenu>
@@ -31,6 +48,39 @@
     void OnClick(MenuItemEventArgs args)
     {
         sidebarExpanded = false;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await RenewTokenIfNeededAsync();
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task RenewTokenIfNeededAsync()
+    {
+        var authenticationState = await _authenticationStateJwt.GetAuthenticationStateAsync();
+        var user = authenticationState.User;
+
+        var expiration = user.FindFirst(c => c.Type == "exp")?.Value;
+
+        if (!string.IsNullOrEmpty(expiration) && long.TryParse(expiration, out var expUnixTime))
+        {
+            var expirationTime = DateTimeOffset.FromUnixTimeSeconds(expUnixTime);
+            var timeRemaining = expirationTime.Subtract(DateTimeOffset.UtcNow);
+
+            // Establecer el umbral según tus necesidades
+            var threshold = TimeSpan.FromMinutes(5);
+
+            if (timeRemaining < threshold)
+            {
+                // Renovar el token si es necesario
+                var renewedToken = await _authRepository.RenewToken( new LoginRenewToken(_collectionShared.CurrentToken, _collectionShared.SecretKey));
+                if (renewedToken is null || renewedToken.HasError || renewedToken.Content is null)
+                    return;
+
+                await _authenticationStateJwt.Login(renewedToken.Content.User, renewedToken.Content.Token);
+            }
+        }
     }
 }
 

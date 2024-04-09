@@ -126,5 +126,22 @@ namespace LT.TechLabHackathon.UI.DataAccess.Repositories
                 return _errorHandler.Error<UserDto>(ex, "GetAllAsync", new ());
             }
         }
+
+        public async Task<ResponseService<LoginResponseDto>> RenewToken(LoginRenewToken loginRequest)
+        {
+            try
+            {
+                var httpResponse = await _httpClient.PostAsJsonAsync<LoginRenewToken>($"{RoutePath}/{Controller}/renewtoken/", loginRequest);
+                var response = await httpResponse.Content.ReadFromJsonAsync<ResponseService<LoginResponseDto>>();
+                if (response == null || response.HasError)
+                    throw new Exception(response == null ? "Service did not return a response" : response.Message);
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return _errorHandler.Error<LoginResponseDto>(ex, "RenewToken", new LoginResponseDto(string.Empty, new UserDto()));
+            }
+        }
     }
 }

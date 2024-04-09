@@ -21,8 +21,7 @@ namespace LT.TechLabHackathon.UI.Pages
         private async Task OnLoginSuccess(LoginResponseDto loginResponse)
         {
             _userInfo = loginResponse.User;
-            _collectionsShared.UserInfo = loginResponse.User;
-            await _loginService.Login(loginResponse.Token);
+            await _loginService.Login(loginResponse.User, loginResponse.Token);
             
             _notification.Notify(Radzen.NotificationSeverity.Success, "Login Successfully", "The user is logged in",3000);
         }

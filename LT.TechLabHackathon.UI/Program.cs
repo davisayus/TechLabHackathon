@@ -14,9 +14,10 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+//builder.Services.AddHttpClient("api-techlab-hackathon", client => client.BaseAddress = new Uri("https://localhost:7098"));
+builder.Services.AddHttpClient("api-techlab-hackathon", client => client.BaseAddress = new Uri("https://techlab-hackathon.azurewebsites.net"));
 
-builder.Services.AddHttpClient("api-techlab-hackathon", client => client.BaseAddress = new Uri("https://localhost:7098"));
-builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("api-techlab-hackathon"));
+builder.Services.AddSingleton(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("api-techlab-hackathon"));
 
 builder.Services.AddScoped<IProgrammingLanguageAPIRepository, ProgrammingLanguageAPIRepository>();
 builder.Services.AddScoped<IChallengeLevelAPIRepository, ChallengeLevelAPIRepository>();

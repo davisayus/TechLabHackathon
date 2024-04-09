@@ -54,6 +54,11 @@ namespace LT.TechLabHackathon.UI.Components.User
                     if (setPasswordResponse is null || setPasswordResponse.HasError)
                         _notification.Notify(NotificationSeverity.Error, "Set Password", response?.Message, 3000);
 
+                    var loginResponse = await _authRepository.Login(new LoginRequestDto(userCreate.Email, _password));
+                    if (loginResponse is null || loginResponse.HasError || loginResponse.Content is null)
+                        _notification.Notify(NotificationSeverity.Error, "Login", response?.Message, 3000);
+                    else
+                        await _loginService.Login(loginResponse.Content!.User, loginResponse.Content.Token!);
                     //Goto home 
                     _navigationManager.NavigateTo("/");
                 }

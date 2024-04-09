@@ -10,28 +10,28 @@ namespace LT.TechLabHackathon.UI.Components.Login
         [Parameter] public EventCallback<LoginResponseDto> OnLoginSuccess { get; set; }
         [Parameter] public EventCallback<string> OnLoginError { get; set; }
 
-
-        string userName = "techlab@gmail.com";
-        string password = "admin";
+        string userName = "";
+        string password = "";
         bool rememberMe = true;
-
         bool doubleFactorRequired = false;
+        bool loggingIn = false;
 
         private async Task OnLogin(LoginArgs args, string name)
         {
+            loggingIn = true;
+
             var responseLogin = await _authRepository.Login(new LoginRequestDto(args.Username, args.Password));
-            if (responseLogin == null || responseLogin.HasError)
+            if (responseLogin is null || responseLogin.HasError)
                 await OnLoginError.InvokeAsync(responseLogin?.Message);
             else
                 await OnLoginSuccess.InvokeAsync(responseLogin.Content);
 
-            Console.WriteLine($"{name} -> Username: {args.Username}, password: {args.Password}, remember me: {args.RememberMe}");
+            loggingIn = false;
         }
 
         void OnRegister(string name)
         {
             navigationManager.NavigateTo("register");
-            Console.WriteLine($"{name} -> Register");
         }
 
         void OnResetPassword(string value, string name)

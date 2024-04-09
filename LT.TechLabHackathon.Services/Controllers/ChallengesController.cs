@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using LT.TechLabHackathon.Domain.Contracts.Generic;
 using LT.TechLabHackathon.Shared.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LT.TechLabHackathon.Services.Controllers
 {
+    [Authorize]
     [Route("api/v1/[controller]")]
     [ApiController]
     public class ChallengesController : GenericController<Challenge, ChallengeDto, ChallengeCreateDto>

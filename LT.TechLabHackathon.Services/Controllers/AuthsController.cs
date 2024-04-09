@@ -7,6 +7,7 @@ using LT.TechLabHackathon.Domain.Contracts;
 using LT.TechLabHackathon.Shared.Helpers;
 using static LT.TechLabHackathon.Shared.DTOs.Records;
 using LT.TechLabHackathon.Shared.DTOs;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace LT.TechLabHackathon.Services.Controllers
 {
@@ -68,6 +69,14 @@ namespace LT.TechLabHackathon.Services.Controllers
 
             var userEmailClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)!.Value ?? string.Empty;
             var response = await _core.GetUserAuthenticated(userEmailClaim);
+            return StatusCode((int)response.StatusHttp, response);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("renewtoken")]
+        public async Task<ActionResult<ResponseService<LoginResponseDto>>> RenewToken([FromBody] LoginRenewToken loginRenewToken)
+        {
+            var response = await _core.RenewToken(loginRenewToken);
             return StatusCode((int)response.StatusHttp, response);
         }
 

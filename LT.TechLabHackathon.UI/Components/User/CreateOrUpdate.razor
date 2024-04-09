@@ -1,11 +1,14 @@
 ﻿@using LT.TechLabHackathon.Shared.DTOs
 @using LT.TechLabHackathon.UI.Core
 
+
 @inject IUserAPIRepository _userRepository
 @inject IAuthenticationAPIRepository _authRepository
+@inject ILoginService _loginService
 @inject NotificationService _notification
 @inject NavigationManager _navigationManager
 @inject CollectionsShared _collectionsShared
+
 
 @if (_userCreate is null)
 {

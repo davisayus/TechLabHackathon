@@ -4,11 +4,18 @@
 
 
 <RadzenCard class="rz-my-12 rz-mx-auto rz-p-4 rz-p-md-12" style="max-width: 600px;">
-    <RadzenTemplateForm Data=@("Login")>
-        <RadzenLogin AllowRegister="true" AllowResetPassword="true" Username=@userName Password=@password
-                     AllowRememberMe="true" RememberMe="@rememberMe"
-                     Login=@(args => OnLogin(args, "Login"))
-                     ResetPassword=@(args => OnResetPassword(args, "Reset"))
-                     Register=@(args => OnRegister("Register")) />
-    </RadzenTemplateForm>
+    @if (loggingIn)
+    {
+        <RadzenText Text="Logging in ..." TextStyle="TextStyle.Body1" />
+    }
+    else
+    {
+        <RadzenTemplateForm Data=@("Login")>
+            <RadzenLogin AllowRegister="true" AllowResetPassword="true" Username=@userName Password=@password
+                         AllowRememberMe="true" RememberMe="@rememberMe"
+                         Login=@(args => OnLogin(args, "Login"))
+                         ResetPassword=@(args => OnResetPassword(args, "Reset"))
+                         Register=@(args => OnRegister("Register")) />
+        </RadzenTemplateForm>
+    }
 </RadzenCard>

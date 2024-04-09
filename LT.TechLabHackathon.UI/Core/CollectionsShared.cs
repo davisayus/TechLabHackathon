@@ -20,11 +20,13 @@ namespace LT.TechLabHackathon.UI.Core
             UserInfo ??= new UserDto();
             CurrentToken ??= string.Empty;
             ChallengeLevels ??= [];
+            SecretKey ??= string.Empty;
         }
 
         public IEnumerable<ChallengeLevelDto> ChallengeLevels { get; set; }
         public string CurrentToken { get; set; }
         public UserDto UserInfo { get; set; }
+        public string SecretKey { get; set; }
 
         public async Task InitializedAsync(ILocalStorageService localStorage)
         {

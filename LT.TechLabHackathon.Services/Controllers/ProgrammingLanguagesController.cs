@@ -11,9 +11,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using static LT.TechLabHackathon.Shared.DTOs.Records;
 using LT.TechLabHackathon.Shared.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LT.TechLabHackathon.Services.Controllers
 {
+    [Authorize]
     [Route("api/v1/[controller]")]
     [ApiController]
     public class ProgrammingLanguagesController : GenericController<ProgrammingLanguage, ProgrammingLanguageDto, ProgrammingLanguageCreateDto>

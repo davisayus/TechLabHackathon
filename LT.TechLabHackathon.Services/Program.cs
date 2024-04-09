@@ -89,6 +89,15 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader()
             .AllowAnyMethod();
         });
+
+    options.AddPolicy(name: "OnlyUI",
+        policy =>
+        {
+            policy.WithOrigins("https://ui-techlab-hackathon.azurewebsites.net")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+        });
+
 });
 
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
@@ -112,13 +121,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("OnlyUI");
 
 app.UseAuthorization();
-
 app.MapControllers();
-
-app.UseCors("Open");
-
 app.UseRequestTimeouts();
 
 app.Run();

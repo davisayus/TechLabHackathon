@@ -14,5 +14,6 @@ namespace LT.TechLabHackathon.Shared.DTOs
         public record LoginResponseDto(string Token, UserDto User);
         public record LoginRequestDto(string UserName, string Password);
         public record LoginChangePasswordDto(string UserName, string CurrentPassword, string NewPassword);
+        public record LoginRenewToken(string ExpiredToken, string SecretKey);
     }
 }

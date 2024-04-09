@@ -1,0 +1,27 @@
+﻿@inject CollectionsShared _collectionShared
+@inject ILoginService _loginService
+@inject NavigationManager navigationManager
+@inject AuthenticationStateJWT _authenticationStateJwt
+
+<RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Right">
+    <AuthorizeView>
+        <Authorized>
+            <RadzenText TextStyle="TextStyle.Body1" Style="padding-right:50px; color: var(--rz-text-contrast-color); margin-bottom:0">Welcome, @_authenticationStateJwt.AuthenticatedUserName</RadzenText>
+            <RadzenLink Icon="logout" onclick="@OnLogout" Text="Logout" />
+        </Authorized>
+        <NotAuthorized>
+            <RadzenLink Icon="login" Path="/" Text="Login" Style="padding-right:50px" />
+            <RadzenLink Icon="person_add_alt" Path="register" Text="Register" />
+        </NotAuthorized>
+    </AuthorizeView>
+</RadzenRow>
+
+@code {
+
+    private async Task OnLogout()
+    {
+        await _loginService.Logout();
+        navigationManager.NavigateTo("/");
+    } 
+
+}

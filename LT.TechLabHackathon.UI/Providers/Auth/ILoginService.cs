@@ -1,8 +1,10 @@
-﻿namespace LT.TechLabHackathon.UI.Providers.Auth
+﻿using LT.TechLabHackathon.Shared.DTOs;
+
+namespace LT.TechLabHackathon.UI.Providers.Auth
 {
     public interface ILoginService
     {
-        Task Login(string token);
+        Task Login(UserDto user, string token);
         Task Logout();
     }
 }
