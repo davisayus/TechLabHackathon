@@ -1,8 +1,11 @@
 using LT.TechLabHackathon.Core.v1.Contracts;
+using LT.TechLabHackathon.Core.v1.Providers;
 using LT.TechLabHackathon.DataAccess.Repositories;
 using LT.TechLabHackathon.DataAccess.SqlServerContext;
 using LT.TechLabHackathon.Domain.Contracts;
+using LT.TechLabHackathon.Services.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -22,7 +25,9 @@ var configuration = builder.Configuration
     .AddEnvironmentVariables()
     .Build();
 
-builder.Services.AddControllers().AddJsonOptions(jo => { jo.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles; });
+builder.Services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
+builder.Services.AddControllers(options => options.Filters.Add<RequestModelValidationFilter>())
+    .AddJsonOptions(jo => { jo.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles; });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -105,7 +110,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProgrammingLanguageRepository, ProgrammingLanguageRepository>();
 builder.Services.AddScoped<IChallengeRepository, ChallengeRepository>();
 builder.Services.AddScoped<IChallengeLevelRepository, ChallengeLevelRepository>();
-
+builder.Services.AddScoped<ICompiler, CompilerCSharpTest1>();
 builder.Services.AddRequestTimeouts();
 
 var app = builder.Build();
@@ -121,7 +126,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("OnlyUI");
+app.UseCors("Open");
 
 app.UseAuthorization();
 app.MapControllers();

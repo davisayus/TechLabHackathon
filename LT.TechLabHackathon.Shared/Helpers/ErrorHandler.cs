@@ -20,13 +20,13 @@ namespace LT.TechLabHackathon.Shared.Helpers
         {
             string innerException = ex.InnerException == null ? string.Empty : ex.InnerException.Message;
             _logger.LogError(ex, $"Service: {typeof(T)}.{serviceName}, Message: {ex.Message} {innerException})? ");
-            return new ResponseService<U>(true, $"Exception: {ex.Message} Inner Exception: {innerException}", System.Net.HttpStatusCode.InternalServerError, content);
+            return new ResponseService<U>(true, $"Exception in {serviceName}, Please report the error to the area in charge ", System.Net.HttpStatusCode.InternalServerError, content);
         }
 
         public ResponseService<U> Warning<U>(string message, string serviceName, U content)
         {
             _logger.LogWarning($"Service: {typeof(T)}.{serviceName} Warning Messsage: {message}");
-            return new ResponseService<U>(true, $"Warning: {message} ", System.Net.HttpStatusCode.NoContent, content);
+            return new ResponseService<U>(true, $"Warning: {message} ", System.Net.HttpStatusCode.OK, content);
         }
 
     }

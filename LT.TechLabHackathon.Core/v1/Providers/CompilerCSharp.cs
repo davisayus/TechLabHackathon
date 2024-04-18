@@ -9,54 +9,59 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CSharp;
 using System.CodeDom.Compiler;
+using LT.TechLabHackathon.Core.v1.Contracts;
+using LT.TechLabHackathon.Shared.DTOs;
 
 namespace LT.TechLabHackathon.Core.v1.Providers
 {
-    public class CompilerCSharp
+    public class CompilerCSharp: ICompiler
     {
 
-        public static object ExecuteCSharpCode(string code, object[] parameters, int timeoutMilliseconds)
+        public async Task<(IEnumerable<object> ResultList, long MemoryUse)> CompileAsync(ChallengeDto challenge, string code)
         {
+            int timeoutMilliseconds = 1000;
+
             // Configurar el compilador C#
             CSharpCodeProvider provider = new CSharpCodeProvider();
             CompilerParameters compilerParams = new CompilerParameters();
             compilerParams.GenerateInMemory = true;
             compilerParams.GenerateExecutable = false;
 
-            // Agregar las referencias necesarias
+            // add needed references
             compilerParams.ReferencedAssemblies.Add("System.dll");
             compilerParams.ReferencedAssemblies.Add("mscorlib.dll");
 
-            // Compilar el código C#
+            // Compile C# code
             CompilerResults results = provider.CompileAssemblyFromSource(compilerParams, code);
 
-            // Verificar si hay errores de compilación
             if (results.Errors.HasErrors)
-            {
-                throw new Exception("Error de compilación en el código proporcionado.");
-            }
+                throw new Exception("Compilation error");
 
-            // Obtener el ensamblado compilado
+            // Obtain the compiled assembly
             Assembly assembly = results.CompiledAssembly;
 
-            // Obtener la clase "Program" y su método "Main"
+            // Obtain the class "Program" and its method "method name".
             Type programType = assembly.GetType("Program");
-            MethodInfo methodInfo = programType.GetMethod("Main");
+            MethodInfo methodInfo = programType.GetMethod(challenge.MethodName);
 
-            // Crear una instancia del método en un dominio de aplicación seguro
+            // Create an instance of the method in a secure application domain
             //AppDomainSetup domainSetup = new AppDomainSetup();
             //PermissionSet permissions = new PermissionSet(PermissionState.Unrestricted);
             AppDomain appDomain = AppDomain.CreateDomain("DynamicCodeExecutionDomain");
 
-            
-            // Ejecutar el método en un hilo separado para evitar bloqueos
-            object result = null;
+
+            // Execute the method in a separate thread to avoid deadlocks
+            List<object> result = [];
             Exception exception = null;
             System.Threading.Thread thread = new System.Threading.Thread(() =>
             {
                 try
                 {
-                    result = methodInfo.Invoke(null, parameters);
+                    foreach (var validation in challenge.Validations)
+                    {
+                        result.Add(methodInfo.Invoke(null, validation.InputParameters.Select(p => p.InputValue).ToArray()));
+                    }
+                    
                 }
                 catch (Exception ex)
                 {
@@ -64,29 +69,26 @@ namespace LT.TechLabHackathon.Core.v1.Providers
                 }
             });
 
-            // Obtener el uso de memoria antes de la ejecución
+            // Get memory usage before execution
             long memoryBefore = Process.GetCurrentProcess().WorkingSet64;
 
             thread.Start();
 
-            // Esperar hasta que el hilo termine o hasta que se alcance el tiempo máximo
+            // Wait until the thread ends or until the maximum time is reached.
             if (!thread.Join(timeoutMilliseconds))
             {
                 thread.Abort();
-                throw new TimeoutException("Tiempo de ejecución excedido.");
+                throw new TimeoutException("Exceeded execution time.");
             }
 
-            // Obtener el uso de memoria después de la ejecución
+            // Get memory usage after execution
             long memoryAfter = Process.GetCurrentProcess().WorkingSet64;
 
-            // Si hubo una excepción durante la ejecución, lanzarla
             if (exception != null)
-            {
                 throw exception;
-            }
 
-            // Retornar el resultado de la ejecución y el uso de memoria
-            return new Tuple<object, long>(result, memoryAfter - memoryBefore);
+            // Return the result of execution and memory usage
+            return (result, (memoryAfter - memoryBefore));
         }
 
     }

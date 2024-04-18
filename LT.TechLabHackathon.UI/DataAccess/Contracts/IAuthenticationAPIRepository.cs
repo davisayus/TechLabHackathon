@@ -13,5 +13,6 @@ namespace LT.TechLabHackathon.UI.DataAccess.Contracts
         Task<ResponseService<bool>> ChangePassword(LoginChangePasswordDto loginRequest);
         Task<ResponseService<UserDto>> GetUserAuthenticated();
         Task<ResponseService<LoginResponseDto>> RenewToken(LoginRenewToken loginRenewToken);
+        Task<ResponseService<LoginResponseDto>> Register(UserCreateDto userCreate);
     }
 }

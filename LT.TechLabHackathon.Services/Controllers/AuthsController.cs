@@ -80,5 +80,14 @@ namespace LT.TechLabHackathon.Services.Controllers
             return StatusCode((int)response.StatusHttp, response);
         }
 
+
+        [AllowAnonymous]
+        [HttpPost("register")]
+        public async Task<ActionResult<ResponseService<LoginResponseDto>>> RegisterAsync([FromBody] UserCreateDto userCreate)
+        {
+            var response = await _core.Register(userCreate);
+            return StatusCode((int)response.StatusHttp, response);
+        }
+
     }
 }

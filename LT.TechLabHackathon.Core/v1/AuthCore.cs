@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using static LT.TechLabHackathon.Shared.DTOs.Records;
@@ -364,6 +365,36 @@ namespace LT.TechLabHackathon.Core.v1
             catch (Exception ex)
             {
                 return _errors.Error(ex, "RenewToken", new LoginResponseDto(string.Empty, new UserDto()));
+            }
+        }
+
+        public async Task<ResponseService<LoginResponseDto>> Register(UserCreateDto userCreate)
+        {
+            try
+            {
+                var userExist = await _repository.GetUserByEmail(userCreate.Email);
+                if (!string.IsNullOrEmpty(userExist.Email))
+                    return _errors.Warning<LoginResponseDto>("The email has already been registered", "AuthCore.Register", new LoginResponseDto(string.Empty, new UserDto()));
+
+                var newUser = new User();
+                newUser = ExtensionMethods.MapperTo<UserCreateDto, User>(userCreate);
+
+                var responseCreated = await _repository.RegisterUserAsync(newUser);
+                if (!responseCreated.IsAdded) return _errors.Warning<LoginResponseDto>("Record not added", "AddAsync", new LoginResponseDto(string.Empty, new UserDto()));
+
+                var userDto = ExtensionMethods.MapperTo<User, UserDto>(responseCreated.UserAdded);
+
+                string encrypValue = $"{userDto.Email}.{userCreate.Password}";
+                string passEncrypt = _encryptCore.Encrypt_HMACSHA256(encrypValue, _configuration["EncrypPassword:Key"]!);
+                if (!await _repository.UpdatePasswordUser(userDto.UserId, passEncrypt))
+                    throw new Exception("There were problems assigning the password, try again");
+
+                var response = new LoginResponseDto(GetTokenJWT(userDto), userDto);
+                return new ResponseService<LoginResponseDto>(false, "Success Authentication", HttpStatusCode.OK, response);
+            }
+            catch (Exception ex)
+            {
+                return _errors.Error<LoginResponseDto>(ex, $"AuthCore.Register", new LoginResponseDto(string.Empty,new UserDto()));
             }
         }
     }

@@ -14,5 +14,6 @@ namespace LT.TechLabHackathon.Domain.Contracts
         Task<AuthUserKey> AddUserDynamicKey(AuthUserKey userToken);
         Task<bool> UpdateUserDynamicKey(AuthUserKey userKey);
         Task<bool> UpdatePasswordUser(int userId, string password);
+        Task<(User UserAdded, bool IsAdded)> RegisterUserAsync(User newUser);
     }
 }

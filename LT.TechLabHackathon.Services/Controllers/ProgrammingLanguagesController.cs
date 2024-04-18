@@ -20,18 +20,20 @@ namespace LT.TechLabHackathon.Services.Controllers
     [ApiController]
     public class ProgrammingLanguagesController : GenericController<ProgrammingLanguage, ProgrammingLanguageDto, ProgrammingLanguageCreateDto>
     {
-        private readonly IGenericCore<ProgrammingLanguage, ProgrammingLanguageDto, ProgrammingLanguageCreateDto> core; 
-        public ProgrammingLanguagesController(IProgrammingLanguageRepository repository, ILogger<ProgrammingLanguage> logger) : base(new ProgrammingLanguageCore(repository, logger), repository, logger)
+        private readonly IGenericCore<ProgrammingLanguage, ProgrammingLanguageDto, ProgrammingLanguageCreateDto> core;
+        private readonly ICompiler _compiler;
+
+        public ProgrammingLanguagesController(IProgrammingLanguageRepository repository, ILogger<ProgrammingLanguage> logger, ICompiler compiler) : base(new ProgrammingLanguageCore(repository, logger), repository, logger)
         {
             core = _core;
+            _compiler = compiler;
         }
 
         [HttpPost("compile")]
-        public async Task<ActionResult<ResponseService<string>>> CompileCode([FromBody] RequestCompile requestCompile)
+        public async Task<ActionResult<ResponseService<(IEnumerable<object> ResultList,long MemoryUse)>>> CompileCode([FromBody] RequestCompile requestCompile)
         {
-            var compiler = new CompilerDotNet();
-            var response = await compiler.Compile(requestCompile.Challenge, requestCompile.Code);
-            return Ok(new ResponseService<string>(false,"Compiled successfuly",System.Net.HttpStatusCode.OK, response));
+            var response = await _compiler.CompileAsync(requestCompile.Challenge, requestCompile.Code);
+            return Ok(new ResponseService<(IEnumerable<object> ResultList, long MemoryUse)>(false,"Compiled successfuly",System.Net.HttpStatusCode.OK, response));
         }
     }
 }

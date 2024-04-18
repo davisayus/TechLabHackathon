@@ -25,7 +25,7 @@ namespace LT.TechLabHackathon.Services.Controllers.Generic
         }
 
         [HttpGet]
-        public async Task<ActionResult<ResponseService<IEnumerable<Q>>>> GetAllAsync()
+        public virtual async Task<ActionResult<ResponseService<IEnumerable<Q>>>> GetAllAsync()
         {
             var response = await _core.GetAllAsync();
             return StatusCode((int)response.StatusHttp, response);
@@ -39,14 +39,14 @@ namespace LT.TechLabHackathon.Services.Controllers.Generic
         //}
 
         [HttpPost("create")]
-        public async Task<ActionResult<ResponseService<Q>>> Add([FromBody] C createDto)
+        public virtual async Task<ActionResult<ResponseService<Q>>> Add([FromBody] C createDto)
         {
             var response = await _core.AddAsync(createDto);
             return StatusCode((int)response.StatusHttp, response);
         }
 
         [HttpPut("update/{id}")]
-        public async Task<ActionResult<ResponseService<bool>>> Update([FromBody] C updateDto, int id)
+        public virtual async Task<ActionResult<ResponseService<bool>>> Update([FromBody] C updateDto, int id)
         {
             var response = await _core.UpdateAsync(updateDto, id);
             return StatusCode((int)response.StatusHttp, response);

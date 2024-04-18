@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LT.TechLabHackathon.Shared.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace LT.TechLabHackathon.Core.v1.Contracts
 {
     public interface ICompiler
     {
-        Task<string> CompileAsync();
+        Task<(IEnumerable<object> ResultList, long MemoryUse)> CompileAsync(ChallengeDto challenge, string code);
     }
 }

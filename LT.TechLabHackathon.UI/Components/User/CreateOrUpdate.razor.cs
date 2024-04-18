@@ -18,7 +18,10 @@ namespace LT.TechLabHackathon.UI.Components.User
 
         private string _fileName = string.Empty;
         private long? _fileSize;
-        
+
+        private bool isProcessing = false;
+        private string taskProcessing = string.Empty;
+
         public CreateOrUpdate()
         {
             _userCreate = new UserCreateDto();
@@ -43,26 +46,24 @@ namespace LT.TechLabHackathon.UI.Components.User
 
         private async Task Submit(UserCreateDto userCreate)
         {
+            isProcessing = true;
+
             if (IsCreate)
             {
-                var response = await _userRepository.Create(userCreate);
+                taskProcessing = $"Registering user ... {DateTime.Now.ToLongTimeString()}";
+                Console.WriteLine(taskProcessing);
+
+                var response = await _authRepository.Register(userCreate);
                 if (response is null || response.HasError)
+                {
+                    taskProcessing = response!.Message;
                     _notification.Notify(NotificationSeverity.Error, "User Register", response?.Message, 3000);
+                }
                 else
                 {
-                    var setPasswordResponse = await _authRepository.SetPassword(new LoginRequestDto(userCreate.Email, _password));
-                    if (setPasswordResponse is null || setPasswordResponse.HasError)
-                        _notification.Notify(NotificationSeverity.Error, "Set Password", response?.Message, 3000);
-
-                    var loginResponse = await _authRepository.Login(new LoginRequestDto(userCreate.Email, _password));
-                    if (loginResponse is null || loginResponse.HasError || loginResponse.Content is null)
-                        _notification.Notify(NotificationSeverity.Error, "Login", response?.Message, 3000);
-                    else
-                        await _loginService.Login(loginResponse.Content!.User, loginResponse.Content.Token!);
-                    //Goto home 
+                    await _loginService.Login(response.Content!.User, response.Content.Token!);
                     _navigationManager.NavigateTo("/");
                 }
-
             }
             else
             {
@@ -75,6 +76,10 @@ namespace LT.TechLabHackathon.UI.Components.User
                     _navigationManager.NavigateTo("/");
                 }
             }
+
+            isProcessing = false;
+            Console.WriteLine(taskProcessing);
+            StateHasChanged();
         }
 
         private void Cancel()

@@ -10,9 +10,11 @@
 @inject CollectionsShared _collectionsShared
 
 
-@if (_userCreate is null)
+@if (isProcessing)
 {
-    <p><em>Loading...</em></p>
+    <RadzenCard>
+        <RadzenText TextStyle="TextStyle.Body2" Text="@taskProcessing"></RadzenText>
+    </RadzenCard>
 }
 else
 {
@@ -72,7 +74,7 @@ else
                         <RadzenLabel Text="Password" Component="Password" />
                     </RadzenColumn>
                     <RadzenColumn Size="12" SizeMD="8">
-                        <RadzenPassword Name="Password" @bind-Value=@_password Style="display: block; width: 100%" />
+                        <RadzenPassword Name="Password" @bind-Value=@_userCreate.Password Style="display: block; width: 100%" />
                         <RadzenRequiredValidator Component="Password" Text="Enter password" Popup="true" Style="position: absolute" />
                     </RadzenColumn>
                 </RadzenRow>
@@ -83,7 +85,7 @@ else
                     <RadzenColumn Size="12" SizeMD="8">
                         <RadzenPassword Name="RepeatPassword" @bind-Value=@_repeatPassword Style="display: block; width: 100%" />
                         <RadzenRequiredValidator Component="RepeatPassword" Text="Repeat your password" Popup=true Style="position: absolute" />
-                        <RadzenCompareValidator Visible=@(!string.IsNullOrEmpty(_repeatPassword)) Value=@_password Component="RepeatPassword" Text="Passwords should be the same" Popup=true Style="position: absolute" />
+                        <RadzenCompareValidator Visible=@(!string.IsNullOrEmpty(_repeatPassword)) Value=@_userCreate.Password Component="RepeatPassword" Text="Passwords should be the same" Popup=true Style="position: absolute" />
                     </RadzenColumn>
                 </RadzenRow>
                 </RadzenStack>
@@ -91,8 +93,10 @@ else
             </RadzenStack>
         </RadzenColumn>
         <RadzenColumn>
-            <RadzenStack>
-
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                    <RadzenCard Style="width:100%; height:100%">
+                    <RadzenText TextStyle="TextStyle.Caption" Text="@taskProcessing"></RadzenText>
+                </RadzenCard>
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>

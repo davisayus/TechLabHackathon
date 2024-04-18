@@ -1,4 +1,5 @@
-﻿using LT.TechLabHackathon.Domain.Entities;
+﻿using LT.TechLabHackathon.Core.v1.Contracts;
+using LT.TechLabHackathon.Domain.Entities;
 using LT.TechLabHackathon.Shared.DTOs;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -12,10 +13,10 @@ using System.Threading.Tasks;
 
 namespace LT.TechLabHackathon.Core.v1.Providers
 {
-    public class CompilerDotNet
+    public class CompilerCSharpTest1 : ICompiler
     {
 
-        public async Task<string> Compile(ChallengeDto challenge, string code)
+        public async Task<(IEnumerable<object>, long)> CompileAsync(ChallengeDto challenge, string code)
         {
             try
             {
@@ -39,6 +40,7 @@ namespace LT.TechLabHackathon.Core.v1.Providers
 
                 using var ms = new MemoryStream();
                 EmitResult result = compilation.Emit(ms);
+                List<object> listResponse = new List<object>();
 
                 if (!result.Success)
                 {
@@ -46,41 +48,37 @@ namespace LT.TechLabHackathon.Core.v1.Providers
                         diagnostic.IsWarningAsError ||
                         diagnostic.Severity == Microsoft.CodeAnalysis.DiagnosticSeverity.Error);
 
-                    return string.Join(Environment.NewLine, failures.Select(f => f.GetMessage()));
+                    var response = string.Join(Environment.NewLine, failures.Select(f => f.GetMessage()));
+                    listResponse.Add(response);
                 }
                 else
                 {
                     var assembly = Assembly.Load(ms.ToArray());
                     var methodName = challenge.MethodName;
                     var entryPoint = assembly.GetType("Program")?.GetMethod(methodName);
-                    string resultCompilation = string.Empty;
-
                     if (entryPoint != null)
                     {
                         foreach (var validation in challenge.Validations)
                         {
                             var parameters = validation.InputParameters.OrderBy(ip => ip.Sequence).Select(ip => ip.InputValue as object).ToArray();
                             var output = entryPoint.Invoke(null, parameters);
-                            resultCompilation += string.Join(Environment.NewLine, $"Execution {validation.ValidationId} input: ({string.Join(",", parameters)}): Result: {output}\n");
+                            var resultCompilation = string.Join(Environment.NewLine, $"Execution {validation.ValidationId} input: ({string.Join(",", parameters)}): Result: {output}\n");
+                            listResponse.Add(resultCompilation);
                         }
-
-                        return resultCompilation;
                     }
                     else
                     {
-                        return $"The method '{methodName}' was not found in the provided code.";
+                        throw new Exception($"The method '{methodName}' was not found in the provided code.");
                     }
-
-                    //// El código se compiló correctamente
-                    //return "El código C# proporcionado es válido.";
                 }
+                return (listResponse, 0);
+
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // Capturar excepciones inesperadas y devolver un error interno del servidor
-                return $"Error interno del servidor: {ex.Message}";
-                
+                throw;
             }
         }
+
     }
 }

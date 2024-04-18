@@ -39,6 +39,13 @@ namespace LT.TechLabHackathon.DataAccess.Repositories
             return result ?? new AuthUserKey();
         }
 
+        public async Task<(User UserAdded, bool IsAdded)> RegisterUserAsync(User newUser)
+        {
+            var addedEntity = _context.Users.Add(newUser).Entity;
+            int recordAffected = await _context.SaveChangesAsync();
+            return (addedEntity, recordAffected != 0);
+        }
+
         public async Task<bool> UpdatePasswordUser(int userId, string password)
         {
             var user = await _context.Users.FindAsync(userId);
