@@ -126,7 +126,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("Open");
+app.UseCors("OnlyUI");
 
 app.UseAuthorization();
 app.MapControllers();

@@ -8,8 +8,14 @@ namespace LT.TechLabHackathon.Shared.DTOs
 {
     public class UserChallengeCreateDto
     {
+        public UserChallengeCreateDto()
+        {
+            CodeChallenge ??= string.Empty;
+        }
+
         public int UserId { get; set; }
         public int ChallengeId { get; set; }
+        public string CodeChallenge { get; set; }
         public bool Unlocked { get; set; }
         public DateTime? UnlockedDate { get; set; }
         public int UnlokedTime { get; set; }

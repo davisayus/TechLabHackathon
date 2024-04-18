@@ -9,10 +9,16 @@ namespace LT.TechLabHackathon.Domain.Entities
 {
     public class UserChallenge
     {
+        public UserChallenge()
+        {
+            CodeChallenge ??= string.Empty;    
+        }
+
         [Key]
         public int UserChallengeId { get; set; }
         public int UserId { get; set; }
         public int ChallengeId { get; set; }
+        public string CodeChallenge { get; set; }
         public bool Unlocked { get; set; }
         public DateTime? UnlockedDate { get; set; }
         public int UnlokedTime { get; set; }
