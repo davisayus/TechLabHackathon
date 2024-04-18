@@ -67,13 +67,10 @@
         {
             var expirationTime = DateTimeOffset.FromUnixTimeSeconds(expUnixTime);
             var timeRemaining = expirationTime.Subtract(DateTimeOffset.UtcNow);
-
-            // Establecer el umbral según tus necesidades
             var threshold = TimeSpan.FromMinutes(5);
 
             if (timeRemaining < threshold)
             {
-                // Renovar el token si es necesario
                 var renewedToken = await _authRepository.RenewToken( new LoginRenewToken(_collectionShared.CurrentToken, _collectionShared.SecretKey));
                 if (renewedToken is null || renewedToken.HasError || renewedToken.Content is null)
                     return;
